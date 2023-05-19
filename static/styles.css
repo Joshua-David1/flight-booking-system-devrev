@@ -62,6 +62,47 @@ body{
     bottom: 1rem;
 }
 
+
+
+
+.dashboard-div{
+    /* text-align: center; */
+    box-sizing: border-box;
+    width: 90%;
+    height: 90%;
+    border-radius: 1rem;
+    background-color: #F6F8FA;
+    position:absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    padding: 2rem;
+}
+
+.admin-menu{
+    display: flex;
+    justify-content: space-between;
+}
+
+.heading-font{
+    font-family: 'Yeseva One'
+}
+
+
+.admin-functions{
+    width: 35%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.admin-functions p{
+    margin-right: 1rem;
+}
+
+.admin-functions button{
+    width: 200px;
+}
+
 .login-btn:hover{
     background-color: #2EC1FD;
     font-size: 1.1rem;
@@ -101,6 +142,18 @@ body{
         left: 0;
     }
 }
+
+
+
+@media only screen and (max-width: 1200px) {
+    .admin-functions{
+        flex-direction: column;
+        align-items:start;
+    }
+    .admin-functions button{
+        width: 100px;
+    }
+  }
 
 /* background - #E7EAF0 */
 /* secondary background - #F6F8FA */

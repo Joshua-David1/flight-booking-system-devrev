@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard-div">
+    <div class="admin-menu">
+        <div>
+            <h2 class="heading-font">Flight Booking System</h2>
+        </div>
+        <div class="admin-functions">
+            <form action="/add-flight">
+                <button class="btn login-btn">Add Flights</button>
+            </form>
+            <form action="/logout">
+                <button class="btn login-btn">Logout</button>
+            </form>
+        </div>
+    </div>
+    <div>
+        <h3 style="text-align: center;margin-top: 3rem;">Available Flights</h3>
+    </div>
+</div>
+{{super()}}
+{% endblock %}

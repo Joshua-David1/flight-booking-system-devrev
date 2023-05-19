@@ -270,6 +270,15 @@ def flights_booking_page():
         return redirect(url_for("login_page"))
 
 
+@app.route("/add-flight")
+def add_flight_page():
+    if current_user.is_authenticated:
+        if current_user.username == "admin":
+            return ""
+        return redirect(url_for("dashboard_page"))
+    return redirect(url_for("login_page"))
+
+
 @app.route("/logout")
 def logout_page():
     logout_user()
