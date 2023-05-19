@@ -79,29 +79,58 @@ body{
     padding: 2rem;
 }
 
-.admin-menu{
+.admin-navbar{
+    background-color: #F6F8FA;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
 }
 
-.heading-font{
+.admin-nav-heading{
     font-family: 'Yeseva One'
 }
 
+.admin-nav-heading h2{
+    margin: 0;
+}
 
-.admin-functions{
-    width: 35%;
+.admin-nav-links ul{
     display: flex;
+    list-style: none;
+    margin: 0;
+}
+
+.admin-nav-links li{
+    display: block;
+    padding: 1rem 1.2rem;
+    text-decoration: none;
+}
+
+.admin-nav-links li a{
+    height: 100%;
+}
+
+
+.admin-hamburger{
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    display: none;
+    flex-direction: column;
+    width: 30px;
+    height: 23px;
     justify-content: space-between;
 }
 
-.admin-functions p{
-    margin-right: 1rem;
+.admin-hamburger span{
+    height: 4px;
+    width: 100%;
+    display: block;
+    background-color: black;
 }
 
-.admin-functions button{
-    width: 200px;
-}
+/* sudo classes */
 
 .login-btn:hover{
     background-color: #2EC1FD;
@@ -120,7 +149,19 @@ body{
     transition: 0.5s color;
 }
 
+.admin-nav-links li:hover{
+    background-color: #484c4ba3;
+    cursor: pointer;
+    transition: 0.5s background-color;
+    border-radius: 0.2rem;
+}
 
+.admin-hamburger:hover{
+    cursor: pointer;
+
+}
+
+/* media query and key frames */
 
 @keyframes pull-down{
     0%{
@@ -145,15 +186,31 @@ body{
 
 
 
-@media only screen and (max-width: 1200px) {
-    .admin-functions{
+@media only screen and (max-width: 600px) {
+    .admin-hamburger{
+        display: flex;
+    }
+
+    .admin-navbar{
+        align-items: flex-start;
         flex-direction: column;
-        align-items:start;
     }
-    .admin-functions button{
-        width: 100px;
+
+    .admin-nav-links{
+        display: none;
+        text-align: center;
+        width: 100%;
     }
-  }
+
+    .admin-nav-links ul{
+        padding: 0;
+        flex-direction: column;
+    }
+
+    .admin-nav-links.show{
+        display: block;
+    }
+}
 
 /* background - #E7EAF0 */
 /* secondary background - #F6F8FA */
