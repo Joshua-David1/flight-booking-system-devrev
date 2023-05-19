@@ -1,7 +1,100 @@
+body{
+    background-color: #E7EAF0;
+}
+
+.reg-input{
+    width: 80%;
+    border: none;
+    border-radius: 0.3rem;
+    margin-bottom: 1.2rem;
+    padding: 0.5rem;
+}
+
+.login-reg-logo{
+    width: 200px;
+    margin-bottom: 3rem;
+    margin-top: 1.5rem;
+}
+
+.login-div{
+   
+    background-color: #F6F8FA;
+    border-radius: 1rem;
+    width: 350px;
+    height: 550px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+
+    animation-name: pull-down;
+    animation-duration: 1s;
+}
+
+
+.login-btn{
+    background-color: #2EC1FD;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    width: 35%;
+    color: white;
+    transition: 0.5s;
+}
+
+.redirect{
+    text-decoration: none;
+    color: #2EC1FD;
+    transition: 1s color;
+}
+
+.redirection-text{
+    position: absolute;
+    margin-left: 3.5rem;
+    bottom: 3rem;
+    animation-name:slide-from-left;
+    animation-duration: 2s;
+}
+
+.login-btn:hover{
+    background-color: #2EC1FD;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    transition: 0.5s;
+}
+
+.reg-input:focus{
+    outline: none;
+}
+
+.redirect:hover{
+    color: #0c9fda;
+    transition: 0.5s color;
+}
 
 
 
+@keyframes pull-down{
+    0%{
+        height: 0;
+        opacity: 0;
+    }
+    100%{
+        height: 550px;
+        opacity: 1;
+    }
+}
 
+
+@keyframes slide-from-left{
+    0%{
+        left: -10000px;
+    }
+    75%{
+        left: 0;
+    }
+}
 
 /* background - #E7EAF0 */
 /* secondary background - #F6F8FA */

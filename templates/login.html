@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="login-div">
+        <img src="{{url_for('static',filename='assets/logo.png')}}" alt="" class="login-reg-logo">
+        <form action="" novalidate>
+            {{form.csrf_token}}
+            {{form.email(autocomplete="off",class_="reg-input")}}
+            <br>
+            {{form.password(class_="reg-input")}}
+            <br>
+            <button class="btn login-btn">Login</button>
+        </form>
+        <h6 class="redirection-text">Don't have an account?<a href="{{url_for('register_page')}}" class="redirect">Sign-up</a></h6>
+    </div>
+
+{{super()}}
+{% endblock %}
