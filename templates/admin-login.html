@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="login-div">
+        <h2 style="font-family: 'Yeseva One', cursive;position:absolute;top: 1rem;left: 50%;transform: translateX(-50%);z-index: 1;">ADMIN LOGIN</h2>
+        <img src="{{url_for('static',filename='assets/logo.png')}}" alt="" class="login-reg-logo">
+        <form action="/admin-login" method="POST" novalidate>
+            {{form.csrf_token}}
+            {{form.username(autocomplete="off",class_="reg-input")}}
+            <br>
+            {{form.password(class_="reg-input")}}
+            <br>
+            <button class="btn login-btn">Login</button>
+        </form>
+        <h6 class="redirection-text">Go Back to user login? <a href="{{url_for('login_page')}}" class="redirect"> Sign-In</a></h6>
+    </div>
+
+{{super()}}
+{% endblock %}

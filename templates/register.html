@@ -2,18 +2,28 @@
 {% block content %}
 
     <div class="login-div">
+        <h2 style="font-family: 'Yeseva One', cursive;position:absolute;top: 1rem;left: 50%;transform: translateX(-50%);">REGISTER</h2>
         <img src="{{url_for('static',filename='assets/logo.png')}}" alt="" class="login-reg-logo">
-        <form action="" novalidate>
+        <form action="/register" method="POST" novalidate>
             {{form.csrf_token}}
             {{form.username(autocomplete="off",class_="reg-input")}}
+            {% if form.username.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.username.errors[0]}}</span>
+            {% endif %}
             <br>
             {{form.password(class_="reg-input")}}
+            {% if form.password.errors and not form.username.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.password.errors[0]}}</span>
+            {% endif %}
             <br>
             {{form.confirm_password(class_="reg-input")}}
+            {% if form.confirm_password.errors and not form.username.errors and not form.password.errors%}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.confirm_password.errors[0]}}</span>
+            {% endif %}
             <br>
             <button class="btn login-btn">Register</button>
         </form>
-        <h6 class="redirection-text">Don't have an account?<a href="{{url_for('login_page')}}" class="redirect">Sign-in</a></h6>
+        <h6 class="redirection-text rd-text-reg">Don't have an account?<a href="{{url_for('login_page')}}" class="redirect">Sign-in</a></h6>
     </div>
 
 {{super()}}

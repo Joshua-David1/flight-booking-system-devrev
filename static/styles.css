@@ -13,7 +13,9 @@ body{
 .login-reg-logo{
     width: 200px;
     margin-bottom: 3rem;
-    margin-top: 1.5rem;
+    margin-top: 2rem;
+    position: relative;
+    top: 40px;
 }
 
 .login-div{
@@ -54,6 +56,10 @@ body{
     bottom: 3rem;
     animation-name:slide-from-left;
     animation-duration: 2s;
+}
+
+.rd-text-reg{
+    bottom: 1rem;
 }
 
 .login-btn:hover{
