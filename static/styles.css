@@ -108,6 +108,9 @@ body{
 }
 
 .admin-nav-links li a{
+    color: black;
+    font-weight: 600;
+    text-decoration: none;
     height: 100%;
 }
 
