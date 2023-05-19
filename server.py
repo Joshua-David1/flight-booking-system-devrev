@@ -1,9 +1,11 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, session, g
 from flask_wtf import FlaskForm
 from flask_sqlalchemy import SQLAlchemy
-from wtforms import StringField, PasswordField, EmailField
+from wtforms import StringField, PasswordField
 from wtforms.validators import InputRequired, Regexp, ValidationError, EqualTo
 from flask_login import LoginManager, login_user, UserMixin, logout_user, current_user
+from datetime import timedelta
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.app_context().push()
@@ -11,6 +13,23 @@ app.config["SECRET_KEY"] = "nothingmuch"
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///user-data-collection.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = "OFF"
 db = SQLAlchemy(app)
+
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(hours=10)
+    session.modified = True
+    g.user = current_user
 
 
 ### VALIDATIONS
@@ -34,7 +53,7 @@ class User_check(object):
             if user == None:
                 raise ValidationError(self.login_message)
             if user.username == "admin" and not self.admin:
-                raise ValidationError("")
+                raise ValidationError("Admin login at /admin-login")
 
 
 user_check = User_check
@@ -46,7 +65,7 @@ class Pass_check(object):
 
     def __call__(self, form, field):
         user = User.query.filter_by(username=form.username.data).first()
-        if user is None or field.data != user.password:
+        if user is None or not check_password_hash(user.password, field.data):
             raise ValidationError("Password Incorrect")
 
 
@@ -142,7 +161,7 @@ class RegisterForm(FlaskForm):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(25), unique=True, nullable=False)
-    password = db.Column(db.String(25), nullable=False)
+    password = db.Column(db.String(80), nullable=False)
 
 
 ## BOOKED FLIGHTS TABLE
@@ -181,40 +200,80 @@ def home():
 @app.route("/login", methods=["POST", "GET"])
 def login_page():
     form = LoginForm()
-    if form.validate_on_submit():
-        return ""
-    return render_template("login.html", form=form)
+    if not current_user.is_authenticated:
+        if form.validate_on_submit():
+            username = form.username.data
+            user = User.query.filter_by(username=username).first()
+            login_user(user)
+            print(current_user.username)
+            return redirect(url_for("dashboard_page"))
+        return render_template("login.html", form=form)
+    return redirect(url_for("dashboard_page"))
 
 
 @app.route("/register", methods=["POST", "GET"])
 def register_page():
     form = RegisterForm()
-    if form.validate_on_submit():
-        return redirect(url_for("dashboard_page"))
-    return render_template("register.html", form=form)
+    if not current_user.is_authenticated:
+        if form.validate_on_submit():
+            username = form.username.data
+            password = form.password.data
+            password = generate_password_hash(
+                password, method="pbkdf2:sha256", salt_length=1
+            )
+            new_user = User(username=username, password=password)
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+            return redirect(url_for("dashboard_page"))
+        return render_template("register.html", form=form)
+    return redirect(url_for("dashboard_page"))
 
 
 @app.route("/admin-login", methods=["POST", "GET"])
 def admin_login_page():
     form = LoginFormAdmin()
     if form.validate_on_submit():
+        username = form.username.data
+        user = User.query.filter_by(username=username).first()
+        login_user(user)
         return redirect(url_for("admin_dashboard_page"))
     return render_template("admin-login.html", form=form)
 
 
 @app.route("/dashboard")
 def dashboard_page():
-    return render_template("dashboard.html")
+    if current_user.is_authenticated:
+        if current_user.username == "admin":
+            return redirect(url_for("admin_dashboard_page"))
+        return render_template("dashboard.html")
+    else:
+        return redirect(url_for("login_page"))
 
 
 @app.route("/admin-dashboard")
 def admin_dashboard_page():
-    return render_template("admin-dashboard.html")
+    if current_user.is_authenticated:
+        if current_user.username == "admin":
+            return render_template("admin-dashboard.html")
+        return redirect(url_for("dashboard_page"))
+    return redirect(url_for("login_page"))
 
 
 @app.route("/flight-booking")
 def flights_booking_page():
-    return render_template("flight-booking.html")
+    if current_user.is_authenticated:
+        if current_user.username == "admin":
+            return redirect(url_for("admin_dashboard_page"))
+        return render_template("flight-booking.html")
+    else:
+        return redirect(url_for("login_page"))
+
+
+@app.route("/logout")
+def logout_page():
+    logout_user()
+    return redirect(url_for("login_page"))
 
 
 if __name__ == "__main__":
