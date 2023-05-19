@@ -13,10 +13,10 @@ def min_char_check(form, field):
 
 
 class LoginForm(FlaskForm):
-    email = EmailField(
-        "email",
-        render_kw={"placeholder": "Email", "maxlength": 40},
-        validators=[InputRequired(message="Enter email"), min_char_check],
+    username = StringField(
+        "username",
+        render_kw={"placeholder": "Username", "maxlength": 25},
+        validators=[InputRequired(message="Enter username"), min_char_check],
     )
     password = PasswordField(
         "password",
@@ -26,10 +26,16 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
-    email = EmailField(
-        "email",
-        render_kw={"placeholder": "Email", "maxlength": 40},
-        validators=[InputRequired(message="Enter email"), min_char_check],
+    username = StringField(
+        "username",
+        render_kw={"placeholder": "Username", "maxlength": 25},
+        validators=[
+            InputRequired(message="Enter username"),
+            min_char_check,
+            Regexp("^[\w]*$", message="Only letter, numbers and underscore."),
+            Regexp("^[a-z\_0-9]*$", message="Only small letters"),
+            Regexp("^[a-z\_]+[a-z\_0-9]*$", message="Cannot begin with numbers"),
+        ],
     )
     password = PasswordField(
         "password",
@@ -65,7 +71,7 @@ def register_page():
 
 @app.route("/dashboard")
 def tickets_page():
-    return ""
+    return render_template("dashboard.html")
 
 
 @app.route("/flight-booking")

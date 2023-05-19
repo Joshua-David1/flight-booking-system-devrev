@@ -5,7 +5,7 @@
         <img src="{{url_for('static',filename='assets/logo.png')}}" alt="" class="login-reg-logo">
         <form action="" novalidate>
             {{form.csrf_token}}
-            {{form.email(autocomplete="off",class_="reg-input")}}
+            {{form.username(autocomplete="off",class_="reg-input")}}
             <br>
             {{form.password(class_="reg-input")}}
             <br>
