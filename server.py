@@ -415,6 +415,16 @@ def booking_flight_page():
         if current_user.username == "admin":
             return redirect(url_for("admin_dashboard_page"))
         all_flights = Flight.query.all()
+        booked_flights = Booking.query.filter_by(username=current_user.username).all()
+        tickets_list = [
+            Flight.query.filter_by(flight_no=details.flight_no).first()
+            for details in booked_flights
+        ]
+        temp = []
+        for flight in all_flights:
+            if flight not in tickets_list:
+                temp.append(flight)
+        all_flights = temp
         return render_template("book-flight.html", all_flights=all_flights)
     else:
         return redirect(url_for("login_page"))
@@ -486,6 +496,18 @@ def add_flight_page():
                 return redirect(url_for("admin_dashboard_page"))
             return render_template("add-flight.html", form=form)
         return redirect(url_for("dashboard_page"))
+    return redirect(url_for("login_page"))
+
+
+@app.route("/show-users", methods=["POST"])
+def show_users_page():
+    if current_user.is_authenticated:
+        if current_user.username == "admin":
+            flightProcess = FlightProcess(db, Flight)
+            flight_no = flightProcess.get_flight_no(request.form["flight-id"])
+            users = Booking.query.filter_by(flight_no=flight_no).all()
+            usernames = [uname.username for uname in users]
+            return jsonify({flight_no: usernames})
     return redirect(url_for("login_page"))
 
 
