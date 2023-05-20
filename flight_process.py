@@ -46,3 +46,8 @@ class FlightProcess(object):
         flight = self.flight.query.filter_by(id=flight_id).first()
         flight.seats_occupied += 1
         self.db.session.commit()
+
+    def decrement_seat(self, flight_no):
+        flight = self.flight.query.filter_by(flight_no=flight_no).first()
+        flight.seats_occupied -= 1
+        self.db.session.commit()

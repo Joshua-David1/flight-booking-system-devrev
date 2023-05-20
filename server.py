@@ -526,6 +526,18 @@ def cancel_flight_route():
     return redirect(url_for("login_page"))
 
 
+@app.route("/cancel-booking", methods=["POST"])
+def cancel_booking_page():
+    if current_user.is_authenticated:
+        if current_user.username != "admin":
+            f_no = request.form["flight_no"]
+            bookingProcess = BookingProcess(db, Booking)
+            bookingProcess.delete_from_booking(f_no)
+            flightProcess = FlightProcess(db, Flight)
+            flightProcess.decrement_seat(f_no)
+    return redirect(url_for("login_page"))
+
+
 @app.route("/logout")
 def logout_page():
     logout_user()

@@ -39,8 +39,8 @@
                 <form action="">
                     <button class="btn btn-success" style="margin-bottom: 1rem;margin-top: 2rem;" disabled>Booked</button>
                 </form>
-                <form action="">
-                    <input type="hidden" value="{{flight.id}}" name="booking-id">
+                <form action="/cancel-booking" method="POST">
+                    <input type="hidden" value="{{flight.flight_no}}" name="flight_no">
                     <button class="btn btn-danger">Cancel Flight</button>
                 </form>
                 
