@@ -13,7 +13,7 @@
     <div class="admin-nav-links">
         <ul>
             <li><a href="/admin-dashboard">Home</a></li>
-            <li><a href="/add-flight"> Add Flight</a></li>
+            <li><a href="/book-flight"> Book Flight</a></li>
             <li><a href="/logout">Logout</a></li>
         </ul>
     </div>
@@ -36,14 +36,14 @@
                     <p>Available Seats : {{flight.total_seats - flight.seats_occupied}}</p>
                 </div>
                 <div>
-                    <form action="/show-users" method="post">
+                    <form action="/booking-confirmation" method="post">
                         <input type="hidden" value="{{flight.id}}" name="flight-id">
-                        <button class="btn btn-success" style="margin-bottom: 1rem;margin-top: 2rem;">Booked Users (API)</button>
+                        <button class="btn btn-success" style="margin-bottom: 1rem;margin-top: 2rem;">Book Flight</button>
                     </form>
-                    <form action="/cancel-flight" method="post">
+                    <!-- <form action="/cancel-flight" method="post">
                         <input type="hidden" value="{{flight.id}}" name="flight-id">
                         <button class="btn btn-danger">Cancel Flight</button>
-                    </form>
+                    </form> -->
                     
                 </div>
             </div>

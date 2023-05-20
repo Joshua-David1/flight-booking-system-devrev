@@ -2,6 +2,10 @@ body{
     background-color: #E7EAF0;
 }
 
+.ticket-img{
+    width: 100px;
+}
+
 .reg-input{
     width: 80%;
     border: none;
@@ -162,13 +166,22 @@ body{
 }
 
 .admin-dashboard-tickets .ticket{
-    width: 400px;
-    height: 150px;
+    width: 800px;
+    height: 200px;
     border-radius: 0.8rem 0 0.8rem 0.8rem;
     background-color: white;
     margin: 1rem;
+    padding: 1rem;
+    font-family: 'Kanit', sans-serif;
+    display: flex;
+    justify-content: space-between;
 }
 
+.admin-dashboard-tickets .ticket .details{
+    display: flex;
+    justify-content: space-between;
+    width: 550px;
+}
 
 .add-flight-div .flight-details{
     width:450px;

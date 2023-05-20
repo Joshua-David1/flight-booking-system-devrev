@@ -23,7 +23,7 @@
     <form action="/add-flight" method="post" novalidate>
         <div class="flight-details">
             {{form.csrf_token}}
-            {{form.flight_no}}
+            {{form.flight_no(autocomplete="off")}}
             {% if form.flight_no.errors %}
             <span style="color:red;font-size:15px;margin:0;display: block;">{{form.flight_no.errors[0]}}</span>
             {% endif %}

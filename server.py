@@ -1,5 +1,14 @@
 from typing import Any
-from flask import Flask, render_template, redirect, url_for, session, g, jsonify
+from flask import (
+    Flask,
+    render_template,
+    redirect,
+    url_for,
+    session,
+    g,
+    jsonify,
+    request,
+)
 from flask_wtf import FlaskForm
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.form import _Auto
@@ -8,6 +17,8 @@ from wtforms.validators import InputRequired, Regexp, ValidationError, EqualTo
 from flask_login import LoginManager, login_user, UserMixin, logout_user, current_user
 from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
+from flight_process import FlightProcess
+from booking_process import BookingProcess
 
 app = Flask(__name__)
 app.app_context().push()
@@ -81,8 +92,12 @@ class SeatsCheck(object):
     def __call__(self, form, field):
         if field.data is None or field.data == "":
             return
-        if int(field.data) < 20 and int(field.data) > 120:
-            raise ValidationError("Seats must be between 20 and 120")
+
+        if field.data.isnumeric() == False:
+            return
+
+        if int(field.data) < 60 or int(field.data) > 340:
+            raise ValidationError("Seats must be between 60 and 340")
 
 
 class MonthDayCheck(object):
@@ -104,6 +119,13 @@ class HourMinuteChosen(object):
     def __call__(self, form, field):
         if field.data.lower() == "hour" or field.data.lower() == "minute":
             raise ValidationError("[!]Please choose a valid option!")
+
+
+class FlightExistingCheck(object):
+    def __call__(self, form, field):
+        flight_no = field.data
+        if Flight.query.filter_by(flight_no=flight_no).first() is not None:
+            raise ValidationError("[!]Flight Already Exists")
 
 
 def min_char_check(form, field):
@@ -197,18 +219,33 @@ class FlightDetailsForm(FlaskForm):
             Regexp("^[\w]*$", message="Only numbers followed by letters."),
             Regexp("^[a-z\_0-9]*$", message="Only small letters"),
             Regexp("^[0-9]+[a-z\_0-9]*$", message="Cannot begin with letters"),
+            FlightExistingCheck(),
         ],
     )
     total_seats = StringField(
         "total_seats",
-        render_kw={"placeholder": "Total Seats", "maxlength": 3},
+        render_kw={"placeholder": "Total Seats (60)", "maxlength": 3},
         validators=[
-            Regexp("^[\w]*$", message="Only numbers followed by letters."),
-            Regexp("^[0-9]+", message="Only numbers"),
+            InputRequired(message="Enter Flight number!"),
+            Regexp("^[0-9]+$", message="Only numbers"),
             SeatsCheck(),
         ],
     )
-    months_list = ["Month"]
+    months_list = [
+        "Month",
+        "JAN",
+        "FEB",
+        "MAR",
+        "APRIL",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC",
+    ]
     days_list = ["Day"]
     places = [
         "Andhra Pradhesh",
@@ -236,14 +273,14 @@ class FlightDetailsForm(FlaskForm):
     min_list = ["Minutes"] + [i for i in range(0, 60)]
     for i in range(1, 31):
         days_list.append(i)
-    for i in range(1, 13):
-        months_list.append(i)
     month = SelectField(
         label="month", choices=months_list, validators=[MonthDayCheck()]
     )
     day = SelectField(label="day", choices=days_list, validators=[MonthDayCheck()])
-    hour = SelectField(label="hour", choices=hour_list, validators=[])
-    minute = SelectField(label="minute", choices=min_list, validators=[])
+    hour = SelectField(label="hour", choices=hour_list, validators=[HourMinuteChosen()])
+    minute = SelectField(
+        label="minute", choices=min_list, validators=[HourMinuteChosen()]
+    )
     source = SelectField(
         label="source", choices=source_list, validators=[SourceDestinationChosen()]
     )
@@ -280,8 +317,11 @@ class Flight(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     flight_no = db.Column(db.String(8), unique=True, nullable=False)
     total_seats = db.Column(db.Integer, nullable=False)
-    seats_available = db.Column(db.Integer, nullable=False)
-    date_time = db.Column(db.DateTime, nullable=False)
+    seats_occupied = db.Column(db.Integer, nullable=False)
+    hour = db.Column(db.Integer, nullable=False)
+    minute = db.Column(db.Integer, nullable=False)
+    day = db.Column(db.Integer, nullable=False)
+    month = db.Column(db.Integer, nullable=False)
     source = db.Column(db.String(30), unique=False, nullable=False)
     destination = db.Column(db.String(30), unique=False, nullable=False)
 
@@ -346,7 +386,15 @@ def dashboard_page():
     if current_user.is_authenticated:
         if current_user.username == "admin":
             return redirect(url_for("admin_dashboard_page"))
-        return render_template("dashboard.html")
+        booked_flights = Booking.query.filter_by(username=current_user.username).all()
+        tickets_list = [
+            Flight.query.filter_by(flight_no=details.flight_no).first()
+            for details in booked_flights
+        ]
+        return render_template(
+            "dashboard.html",
+            data={"username": current_user.username, "tickets_list": tickets_list},
+        )
     else:
         return redirect(url_for("login_page"))
 
@@ -355,19 +403,58 @@ def dashboard_page():
 def admin_dashboard_page():
     if current_user.is_authenticated:
         if current_user.username == "admin":
-            return render_template("admin-dashboard.html")
+            all_flights = Flight.query.all()
+            return render_template("admin-dashboard.html", all_flights=all_flights)
         return redirect(url_for("dashboard_page"))
     return redirect(url_for("login_page"))
 
 
-@app.route("/flight-booking", methods=["GET", "POST"])
-def flights_booking_page():
+@app.route("/book-flight", methods=["GET", "POST"])
+def booking_flight_page():
     if current_user.is_authenticated:
         if current_user.username == "admin":
             return redirect(url_for("admin_dashboard_page"))
-        return render_template("flight-booking.html")
+        all_flights = Flight.query.all()
+        return render_template("book-flight.html", all_flights=all_flights)
     else:
         return redirect(url_for("login_page"))
+
+
+@app.route("/booking-confirmation", methods=["POST"])
+def booking_confirmation_page():
+    if current_user.is_authenticated:
+        if current_user.username == "admin":
+            return redirect(url_for("admin_dashboard_page"))
+
+        flight_id = request.form["flight-id"]
+        flightProcess = FlightProcess(db, Flight)
+        flight_no = flightProcess.get_flight_no(flight_id)
+        is_available = flightProcess.check_seat_and_update(flight_id=flight_id)
+        if is_available:
+            flightProcess.update_seat(flight_id)
+        else:
+            redirect(url_for("dashboard_page"))
+        data = {"username": current_user.username, "flight_no": flight_no}
+        bookingProcess = BookingProcess(db, Booking)
+        bookingProcess.add_to_booking(data)
+        return redirect(url_for("dashboard_page"))
+    return redirect(url_for("login_page"))
+
+
+month_map = {
+    "JAN": 1,
+    "FEB": 2,
+    "MAR": 3,
+    "APRIL": 4,
+    "MAY": 5,
+    "JUN": 6,
+    "JUL": 7,
+    "AUG": 8,
+    "SEP": 9,
+    "OCT": 10,
+    "NOV": 11,
+    "DEC": 12,
+}
 
 
 @app.route("/add-flight", methods=["POST", "GET"])
@@ -376,10 +463,43 @@ def add_flight_page():
         if current_user.username == "admin":
             form = FlightDetailsForm()
             if form.validate_on_submit():
-                print(form.month.data)
-                print(form.day.data)
-                return jsonify({"HAHA": "none"})
+                flight_no = form.flight_no.data
+                total_seats = int(form.total_seats.data)
+                hour = int(form.hour.data)
+                minute = int(form.minute.data)
+                month = form.month.data
+                day = int(form.day.data)
+                source = form.source.data
+                destination = form.destination.data
+                data = {
+                    "flight_no": flight_no,
+                    "total_seats": total_seats,
+                    "hour": hour,
+                    "minute": minute,
+                    "month": month_map[month],
+                    "day": day,
+                    "source": source,
+                    "destination": destination,
+                }
+                flightProcess = FlightProcess(db, Flight)
+                flightProcess.add_to_db(data)
+                return redirect(url_for("admin_dashboard_page"))
             return render_template("add-flight.html", form=form)
+        return redirect(url_for("dashboard_page"))
+    return redirect(url_for("login_page"))
+
+
+@app.route("/cancel-flight", methods=["POST"])
+def cancel_flight_route():
+    if current_user.is_authenticated:
+        if current_user.username == "admin":
+            fid = request.form["flight-id"]
+            flightProcess = FlightProcess(db, Flight)
+            fligh_no = flightProcess.get_flight_no(fid)
+            flightProcess.cancel_flight(fid)
+            bookingProcess = BookingProcess(db, Booking)
+            bookingProcess.delete_from_booking(fligh_no)
+            return redirect(url_for("admin_dashboard_page"))
         return redirect(url_for("dashboard_page"))
     return redirect(url_for("login_page"))
 

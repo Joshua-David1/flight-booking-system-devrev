@@ -1,6 +1,57 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="dashboard-div">
+<nav class="admin-navbar">
+    <div class="admin-nav-heading">
+        <h2>Flight Ticket Booking</h2>
+    </div>
+    <a class="admin-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+    <div class="admin-nav-links">
+        <ul>
+            <li><a href="/admin-dashboard">Home</a></li>
+            <li><a href="/book-flight"> Book Flight</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+<h3 style="text-align: center;margin: 1rem;font-weight: 600;">FLIGHTS BOOKED</h3>
+<div class="admin-dashboard-tickets">
+    {% for flight in data['tickets_list'] %}
+    <div class="ticket">
+        <div class="details">
+            <div>
+                <p>Passenger : {{data['username']}}</p>
+                <p>Fligt number : {{flight.flight_no}}</p>
+                <p>From : {{flight.source}}</p>
+                <p>To : {{flight.destination}}</p>
+            </div>
+            <div>
+                <p>Date : {{flight.day}}/{{flight.month}}/2023</p>
+                <p>Departure Time : {{flight.hour}}:{{flight.minute}}</p>
+                <p>Total Seats : {{flight.total_seats}}</p>
+                <p>Available Seats : {{flight.total_seats - flight.seats_occupied}}</p>
+            </div>
+            <div>
+                <form action="">
+                    <button class="btn btn-success" style="margin-bottom: 1rem;margin-top: 2rem;" disabled>Booked</button>
+                </form>
+                <form action="">
+                    <input type="hidden" value="{{flight.id}}" name="booking-id">
+                    <button class="btn btn-danger">Cancel Flight</button>
+                </form>
+                
+            </div>
+        </div>
+        <div>
+            <img src="{{url_for('static',filename='assets/logo.png')}}" alt="" class="ticket-img">
+        </div>
+    </div>
+    {% endfor %}
 </div>
+<script src="{{url_for('static',filename='index.js')}}"></script>
 {{super()}}
 {% endblock %}
