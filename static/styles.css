@@ -63,8 +63,6 @@ body{
 }
 
 
-
-
 .dashboard-div{
     /* text-align: center; */
     box-sizing: border-box;
@@ -133,6 +131,57 @@ body{
     background-color: black;
 }
 
+
+.admin-dashboard-tickets, .add-flight-div{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+
+
+.add-flight-div input{
+    width: 75%;
+    border-radius: 0.3rem;
+    margin-bottom: 1.2rem;
+    padding: 0.5rem;
+    border-color: #0c9fda;
+}
+
+
+.add-flight-div{
+    text-align: center;
+}
+
+.add-flight-div select{
+    border: none;
+    margin: 0.5rem;
+    padding: 0.5rem;
+}
+
+.admin-dashboard-tickets .ticket{
+    width: 400px;
+    height: 150px;
+    border-radius: 0.8rem 0 0.8rem 0.8rem;
+    background-color: white;
+    margin: 1rem;
+}
+
+
+.add-flight-div .flight-details{
+    width:450px;
+    height: 580px;
+    background-color: white;
+    border-radius: 0.4rem;
+}
+
+.flight-details{
+    text-align: center;
+    padding: 1rem;
+}
+
 /* sudo classes */
 
 .login-btn:hover{
@@ -189,7 +238,7 @@ body{
 
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
     .admin-hamburger{
         display: flex;
     }
@@ -214,8 +263,3 @@ body{
         display: block;
     }
 }
-
-/* background - #E7EAF0 */
-/* secondary background - #F6F8FA */
-/* buttons - #2EC1FD */
-/* secondary - #DEF6FF */

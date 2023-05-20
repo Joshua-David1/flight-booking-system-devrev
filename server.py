@@ -1,7 +1,9 @@
-from flask import Flask, render_template, redirect, url_for, session, g
+from typing import Any
+from flask import Flask, render_template, redirect, url_for, session, g, jsonify
 from flask_wtf import FlaskForm
 from flask_sqlalchemy import SQLAlchemy
-from wtforms import StringField, PasswordField
+from flask_wtf.form import _Auto
+from wtforms import StringField, PasswordField, SelectField
 from wtforms.validators import InputRequired, Regexp, ValidationError, EqualTo
 from flask_login import LoginManager, login_user, UserMixin, logout_user, current_user
 from datetime import timedelta
@@ -41,7 +43,7 @@ class User_check(object):
         self.admin = admin
         self.login_message = "user unavailable"
         self.register_message = "user already exists"
-        self.admin_message = "Admin login is at /admin-login"
+        self.admin_message = "Admin login is at '/admin-login'"
 
     def __call__(self, form, field):
         if self.register:
@@ -53,7 +55,7 @@ class User_check(object):
             if user == None:
                 raise ValidationError(self.login_message)
             if user.username == "admin" and not self.admin:
-                raise ValidationError("Admin login at /admin-login")
+                raise ValidationError(self.admin_message)
 
 
 user_check = User_check
@@ -70,6 +72,38 @@ class Pass_check(object):
 
 
 pass_check = Pass_check
+
+
+class SeatsCheck(object):
+    def __init__(self):
+        pass
+
+    def __call__(self, form, field):
+        if field.data is None or field.data == "":
+            return
+        if int(field.data) < 20 and int(field.data) > 120:
+            raise ValidationError("Seats must be between 20 and 120")
+
+
+class MonthDayCheck(object):
+    def __init__(self) -> None:
+        pass
+
+    def __call__(self, form, field):
+        if field.data.lower() == "month" or field.data.lower() == "day":
+            raise ValidationError("[!]Choose a valid option")
+
+
+class SourceDestinationChosen(object):
+    def __call__(self, form, field):
+        if field.data.lower() == "source" or field.data.lower() == "destination":
+            raise ValidationError("[!]Choose proper Source and Destination")
+
+
+class HourMinuteChosen(object):
+    def __call__(self, form, field):
+        if field.data.lower() == "hour" or field.data.lower() == "minute":
+            raise ValidationError("[!]Please choose a valid option!")
 
 
 def min_char_check(form, field):
@@ -151,6 +185,72 @@ class RegisterForm(FlaskForm):
             InputRequired(message="Please confirm your password"),
             min_char_check,
         ],
+    )
+
+
+class FlightDetailsForm(FlaskForm):
+    flight_no = StringField(
+        "flight_no",
+        render_kw={"placeholder": "Flight Number", "maxlength": 8},
+        validators=[
+            InputRequired(message="Enter flight no"),
+            Regexp("^[\w]*$", message="Only numbers followed by letters."),
+            Regexp("^[a-z\_0-9]*$", message="Only small letters"),
+            Regexp("^[0-9]+[a-z\_0-9]*$", message="Cannot begin with letters"),
+        ],
+    )
+    total_seats = StringField(
+        "total_seats",
+        render_kw={"placeholder": "Total Seats", "maxlength": 3},
+        validators=[
+            Regexp("^[\w]*$", message="Only numbers followed by letters."),
+            Regexp("^[0-9]+", message="Only numbers"),
+            SeatsCheck(),
+        ],
+    )
+    months_list = ["Month"]
+    days_list = ["Day"]
+    places = [
+        "Andhra Pradhesh",
+        "Tamil Nadu",
+        "Kerala",
+        "Karnataka",
+        "Bihar",
+        "Goa",
+        "Haryana",
+        "Himachal Pradesh",
+        "Punjab",
+        "Odisha",
+        "Rajasthan",
+        "Telangana",
+        "Maharashtra",
+        "Sikkim",
+        "West Bengal",
+        "Gujarat",
+        "Assam",
+    ]
+
+    source_list = ["Source"] + places
+    destination_list = ["Destination"] + places
+    hour_list = ["Hours"] + [i for i in range(0, 23)]
+    min_list = ["Minutes"] + [i for i in range(0, 60)]
+    for i in range(1, 31):
+        days_list.append(i)
+    for i in range(1, 13):
+        months_list.append(i)
+    month = SelectField(
+        label="month", choices=months_list, validators=[MonthDayCheck()]
+    )
+    day = SelectField(label="day", choices=days_list, validators=[MonthDayCheck()])
+    hour = SelectField(label="hour", choices=hour_list, validators=[])
+    minute = SelectField(label="minute", choices=min_list, validators=[])
+    source = SelectField(
+        label="source", choices=source_list, validators=[SourceDestinationChosen()]
+    )
+    destination = SelectField(
+        label="destination",
+        choices=destination_list,
+        validators=[SourceDestinationChosen()],
     )
 
 
@@ -260,7 +360,7 @@ def admin_dashboard_page():
     return redirect(url_for("login_page"))
 
 
-@app.route("/flight-booking")
+@app.route("/flight-booking", methods=["GET", "POST"])
 def flights_booking_page():
     if current_user.is_authenticated:
         if current_user.username == "admin":
@@ -270,11 +370,16 @@ def flights_booking_page():
         return redirect(url_for("login_page"))
 
 
-@app.route("/add-flight")
+@app.route("/add-flight", methods=["POST", "GET"])
 def add_flight_page():
     if current_user.is_authenticated:
         if current_user.username == "admin":
-            return ""
+            form = FlightDetailsForm()
+            if form.validate_on_submit():
+                print(form.month.data)
+                print(form.day.data)
+                return jsonify({"HAHA": "none"})
+            return render_template("add-flight.html", form=form)
         return redirect(url_for("dashboard_page"))
     return redirect(url_for("login_page"))
 

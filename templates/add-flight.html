@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<nav class="admin-navbar">
+    <div class="admin-nav-heading">
+        <h2>Flight Ticket Booking</h2>
+    </div>
+    <a class="admin-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </a>
+    <div class="admin-nav-links">
+        <ul>
+            <li><a href="/admin-dashboard">Dashboard</a></li>
+            <li><a href="/add-flight"> Add Flight</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+<h3 style="text-align: center;margin: 1rem;font-weight: 600;">ADD A FLIGHT</h3>
+<div class="add-flight-div">
+    <form action="/add-flight" method="post" novalidate>
+        <div class="flight-details">
+            {{form.csrf_token}}
+            {{form.flight_no}}
+            {% if form.flight_no.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.flight_no.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{form.total_seats}}
+            {% if form.total_seats.errors and not form.flight_no.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.total_seats.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{form.month}}
+            {% if form.month.errors and not form.total_seats.errors and not form.flight_no.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.month.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{form.day}}
+            {% if form.day.errors and not form.month.errors and not form.total_seats.errors and not form.flight_no.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.day.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{form.hour}}
+            {% if form.hour.errors and not form.total_seats.errors and not form.flight_no.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.hour.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{form.minute}}
+            {% if form.minute.errors and not form.month.errors and not form.total_seats.errors and not form.flight_no.errors and not form.hour.errors%}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.minute.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{form.source}}
+            {% if form.source.errors and not form.day.errors and not form.month.errors and not form.total_seats.errors and not form.flight_no.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.source.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{form.destination}}
+            {% if form.destination.errors and not form.source.errors and not form.day.errors and not form.month.errors and not form.total_seats.errors and not form.flight_no.errors%}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{form.destination.errors[0]}}</span>
+            {% endif %}
+            <br>
+            <button class="btn login-btn">Add Flight</button>
+        </div>
+    </form>
+</div>
+<script src="{{url_for('static',filename='index.js')}}"></script>
+{{super()}}
+{% endblock %}

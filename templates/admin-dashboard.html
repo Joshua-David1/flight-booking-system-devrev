@@ -10,13 +10,39 @@
         <span></span>
         <span></span>
     </a>
-    <div class="admin-nav-links show">
+    <div class="admin-nav-links">
         <ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="/admin-dashboard">Home</a></li>
             <li><a href="/add-flight"> Add Flight</a></li>
             <li><a href="/logout">Logout</a></li>
         </ul>
     </div>
 </nav>
+<h3 style="text-align: center;margin: 1rem;font-weight: 600;">FLIGHTS AVAILABLE</h3>
+<div class="admin-dashboard-tickets">
+    
+    <div class="ticket">
+
+    </div>
+    <div class="ticket">
+
+    </div>
+    <div class="ticket">
+
+    </div>
+    <div class="ticket">
+
+    </div>
+    <div class="ticket">
+
+    </div>
+    <div class="ticket">
+
+    </div>
+    <div class="ticket">
+
+    </div>
+</div>
+<script src="{{url_for('static',filename='index.js')}}"></script>
 {{super()}}
 {% endblock %}
