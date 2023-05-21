@@ -23,9 +23,9 @@ from decouple import config
 app = Flask(__name__)
 app.app_context().push()
 app.config["SECRET_KEY"] = "nothingmuch"
-app.config["SQLALCHEMY_DATABASE_URI"] = config(
-    "DATABASE_URL", "sqlite:///user-data-collection.db"
-)
+app.config[
+    "SQLALCHEMY_DATABASE_URI"
+] = "postgresql://flightsdatabase_user:AOWPnh7UvXwWc9tv43BNXqmsAKlEPgvr@dpg-chkt3om4dadfmsnh9pig-a.oregon-postgres.render.com/flightsdatabase"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = "OFF"
 db = SQLAlchemy(app)
 
