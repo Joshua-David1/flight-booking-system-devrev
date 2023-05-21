@@ -552,7 +552,17 @@ def search_flight_page():
                 source = form.source.data
                 destination = form.destination.data
                 flightProcess = FlightProcess(db, Flight)
-                flight_list = flightProcess.search_by_src_n_dst(source, destination)
+                booked_flights = Booking.query.filter_by(
+                    username=current_user.username
+                ).all()
+                tickets_list = [
+                    Flight.query.filter_by(flight_no=details.flight_no).first()
+                    for details in booked_flights
+                ]
+                flight_list = flightProcess.search_by_src_n_dst(
+                    source, destination, tickets_list
+                )
+
                 data = {"form": form, "flight_list": flight_list}
                 return render_template("search-flight.html", data=data)
             return render_template("search-flight.html", data=data)
