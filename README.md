@@ -12,6 +12,12 @@
 #### username - 'admin'
 #### password - 'admin'
 
+## ENDPOINTS
+
+#### user login - /login
+#### user register - /register
+#### admin login - /admin-login
+
 ## SETUP
 
 #### Step 1: Clone the repository using the command 'git clone https://github.com/Joshua-David1/flight-booking-system-devrev.git'
