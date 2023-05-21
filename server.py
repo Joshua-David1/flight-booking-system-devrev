@@ -291,6 +291,38 @@ class FlightDetailsForm(FlaskForm):
     )
 
 
+class SearchFlightForm(FlaskForm):
+    places = [
+        "Andhra Pradhesh",
+        "Tamil Nadu",
+        "Kerala",
+        "Karnataka",
+        "Bihar",
+        "Goa",
+        "Haryana",
+        "Himachal Pradesh",
+        "Punjab",
+        "Odisha",
+        "Rajasthan",
+        "Telangana",
+        "Maharashtra",
+        "Sikkim",
+        "West Bengal",
+        "Gujarat",
+        "Assam",
+    ]
+    source = SelectField(
+        label="source",
+        choices=["Source"] + places,
+        validators=[SourceDestinationChosen()],
+    )
+    destination = SelectField(
+        label="destination",
+        choices=["Destination"] + places,
+        validators=[SourceDestinationChosen()],
+    )
+
+
 ##### DATABASE TABLESS
 
 
@@ -422,7 +454,10 @@ def booking_flight_page():
         ]
         temp = []
         for flight in all_flights:
-            if flight not in tickets_list:
+            if (
+                flight not in tickets_list
+                and flight.total_seats > flight.seats_occupied
+            ):
                 temp.append(flight)
         all_flights = temp
         return render_template("book-flight.html", all_flights=all_flights)
@@ -497,6 +532,23 @@ def add_flight_page():
             return render_template("add-flight.html", form=form)
         return redirect(url_for("dashboard_page"))
     return redirect(url_for("login_page"))
+
+
+@app.route("/search-flight", methods=["GET", "POST"])
+def search_flight_page():
+    if current_user.is_authenticated:
+        if current_user.username != "admin":
+            form = SearchFlightForm()
+            data = {"form": form, "flight_list": []}
+            if form.validate_on_submit():
+                source = form.source.data
+                destination = form.destination.data
+                flightProcess = FlightProcess(db, Flight)
+                flight_list = flightProcess.search_by_src_n_dst(source, destination)
+                data = {"form": form, "flight_list": flight_list}
+                return render_template("search-flight.html", data=data)
+            return render_template("search-flight.html", data=data)
+    return redirect(url_for("admin_dashboard_page"))
 
 
 @app.route("/show-users", methods=["POST"])

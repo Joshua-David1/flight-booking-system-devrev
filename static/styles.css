@@ -195,6 +195,11 @@ body{
     padding: 1rem;
 }
 
+
+.add-flight-div .flight-details.search-flight{
+    height: 250px;
+}
+
 /* sudo classes */
 
 .login-btn:hover{

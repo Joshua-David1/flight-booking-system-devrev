@@ -51,3 +51,13 @@ class FlightProcess(object):
         flight = self.flight.query.filter_by(flight_no=flight_no).first()
         flight.seats_occupied -= 1
         self.db.session.commit()
+
+    def search_by_src_n_dst(self, source, destination):
+        flight = self.flight.query.filter_by(
+            source=source, destination=destination
+        ).all()
+        temp = []
+        for f in flight:
+            if f.total_seats > f.seats_occupied:
+                temp.append(f)
+        return temp

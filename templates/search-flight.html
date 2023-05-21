@@ -13,15 +13,34 @@
     <div class="admin-nav-links">
         <ul>
             <li><a href="/admin-dashboard">My Booking</a></li>
-            <li><a href="{{url_for('search_flight_page')}}">Search Flight</a></li>
-            <li ><a href="/book-flight" style="background-color: #484c4ba3;opacity: 0.4;border-radius: 0.4rem;"> Book Flight</a></li>
+            <li><a href="{{url_for('search_flight_page')}}" style="background-color: #484c4ba3;opacity: 0.4;border-radius: 0.4rem;">Search Flight</a></li>
+            <li ><a href="/book-flight"> Book Flight</a></li>
             <li><a href="/logout">Logout</a></li>
         </ul>
     </div>
 </nav>
+<h3 style="text-align: center;margin: 1rem;font-weight: 600;">Search Flight</h3>
+<div class="add-flight-div">
+    <form action="/search-flight" method="post" novalidate>
+        <div class="flight-details search-flight">
+            {{data['form'].csrf_token}}
+            {{data['form'].source}}
+            {% if data['form'].source.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{data['form'].source.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{data['form'].destination}}
+            {% if data['form'].destination.errors and not data['form'].source.errors%}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{data['form'].destination.errors[0]}}</span>
+            {% endif %}
+            <br>
+            <button class="btn login-btn">Search Flight</button>
+        </div>
+    </form>
+</div>
 <h3 style="text-align: center;margin: 1rem;font-weight: 600;">FLIGHTS AVAILABLE</h3>
 <div class="admin-dashboard-tickets">
-    {% for flight in all_flights%}
+    {% for flight in data['flight_list'] %}
         <div class="ticket">
             <div class="details">
                 <div>
