@@ -381,7 +381,7 @@ def admin_login_page():
     return render_template("admin-login.html", form=form)
 
 
-@app.route("/dashboard")
+@app.route("/myBooking")
 def dashboard_page():
     if current_user.is_authenticated:
         if current_user.username == "admin":
