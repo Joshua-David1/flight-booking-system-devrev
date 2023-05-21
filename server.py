@@ -19,11 +19,14 @@ from datetime import timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from flight_process import FlightProcess
 from booking_process import BookingProcess
+from decouple import config
 
 app = Flask(__name__)
 app.app_context().push()
 app.config["SECRET_KEY"] = "nothingmuch"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///user-data-collection.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = config(
+    "DATABASE_URL", "sqlite:///user-data-collection.db"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = "OFF"
 db = SQLAlchemy(app)
 
@@ -81,7 +84,7 @@ class Pass_check(object):
 
     def __call__(self, form, field):
         user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not check_password_hash(user.password, field.data):
+        if user is None or user.password != field.data:
             raise ValidationError("Password Incorrect")
 
 
@@ -333,7 +336,7 @@ class SearchFlightForm(FlaskForm):
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(25), unique=True, nullable=False)
-    password = db.Column(db.String(80), nullable=False)
+    password = db.Column(db.String(30), nullable=False)
 
 
 ## BOOKED FLIGHTS TABLE
@@ -395,9 +398,6 @@ def register_page():
         if form.validate_on_submit():
             username = form.username.data
             password = form.password.data
-            password = generate_password_hash(
-                password, method="pbkdf2:sha256", salt_length=1
-            )
             new_user = User(username=username, password=password)
             db.session.add(new_user)
             db.session.commit()
