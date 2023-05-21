@@ -363,8 +363,8 @@ class Flight(UserMixin, db.Model):
     destination = db.Column(db.String(30), unique=False, nullable=False)
 
 
-db.create_all()
-
+with app.app_context():
+    db.create_all()
 
 ### ROUTE CONFIGURATION
 
@@ -601,6 +601,4 @@ def logout_page():
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        app.run(debug=True)
+    app.run(debug=True)
