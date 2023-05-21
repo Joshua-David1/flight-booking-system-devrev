@@ -13,7 +13,7 @@
             <br>
             {{form.password(class_="reg-input")}}
             {% if form.password.errors and not form.username.errors %}
-            <span style="color:red;font-size:15px;margin:0">{{ form.password.errors[0]}}</span>
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{ form.password.errors[0]}}</span>
             {% endif %}
             <br>
             <button class="btn login-btn">Login</button>
