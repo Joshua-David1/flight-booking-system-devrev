@@ -100,7 +100,7 @@ FLight Cancellation could also be done by the admin by click on the red button '
 ![booked-users](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/b410bb2b-6e94-47af-80d4-fdd9ea200ff9)
 
 
+## HOSTED WEBSITE
 
-
-
- 
+### The website is hosted at - https://flight-booking-system-devrev.onrender.com/
+##### Note: This web application was designed for desktop.
