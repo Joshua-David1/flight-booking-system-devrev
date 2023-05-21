@@ -23,7 +23,7 @@
 #### Step 1: Clone the repository using the command 'git clone https://github.com/Joshua-David1/flight-booking-system-devrev.git'
 #### STEP 2: navigate to the directory 'flight-booking-system-devrev'
 #### STEP 3: Install the necessary packages using the command 'pip install -r requirements.txt'.
-#### STEP 4: Setup the environment variable for database url using the command 'export DATABASE_URL=sqlite:///<db-name>'.
+#### STEP 4: Setup the environment variable for database url using the command 'export DATABASE_URL=sqlite:///db-name'.
 #### STEP 5: After the packages have been installed and the environment variables have been set, the web server could be started with the command 'python server.py'.
 #### STEP 6: The web application would be running on port 5000 and you could visit the web page using the url "http://localhost:5000"
 
