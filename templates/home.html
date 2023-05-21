@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="login-div">
+        <h2 style="font-family: 'Yeseva One', cursive;position:absolute;top: 1rem;left: 50%;transform: translateX(-50%);">HOME</h2>
+        
+        <img src="{{url_for('static',filename='assets/logo.png')}}" alt="" class="login-reg-logo">
+        <p>Hey! I'm Joshua David. This is the Flight Ticket Booking Website which I created for DevRev Round 2!</p>
+        <form action="{{url_for('admin_login_page')}}" method="GET" novalidate>
+            <button class="btn login-btn">Admin-Login</button>
+        </form>
+        <form action="{{url_for('login_page')}}" method="GET" novalidate>
+            <button class="btn login-btn">Login</button>
+        </form>
+        <form action="{{url_for('register_page')}}" method="GET" novalidate>
+            <button class="btn login-btn">Register</button>
+        </form>
+    </div>
+
+{{super()}}
+{% endblock %}

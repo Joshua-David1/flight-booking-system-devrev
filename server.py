@@ -68,6 +68,9 @@ class User_check(object):
             if user.username == "admin" and not self.admin:
                 raise ValidationError(self.admin_message)
 
+            if user.username != "admin" and self.admin:
+                raise ValidationError("[!]Regular user not permitted")
+
 
 user_check = User_check
 
@@ -366,6 +369,8 @@ db.create_all()
 
 @app.route("/")
 def home():
+    if not current_user.is_authenticated:
+        return render_template("home.html")
     return redirect(url_for("login_page"))
 
 
