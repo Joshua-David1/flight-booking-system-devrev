@@ -23,9 +23,7 @@ from decouple import config
 app = Flask(__name__)
 app.app_context().push()
 app.config["SECRET_KEY"] = "nothingmuch"
-app.config[
-    "SQLALCHEMY_DATABASE_URI"
-] = "postgresql://flightsdatabase_user:AOWPnh7UvXwWc9tv43BNXqmsAKlEPgvr@dpg-chkt3om4dadfmsnh9pig-a.oregon-postgres.render.com/flightsdatabase"
+app.config["SQLALCHEMY_DATABASE_URI"] = config("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = "OFF"
 db = SQLAlchemy(app)
 
@@ -36,7 +34,7 @@ login_manager.init_app(app)
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.filter_by(id=user_id).first()
+    return db.session.get(User, int(user_id))
 
 
 ### VALIDATIONS
@@ -359,6 +357,11 @@ with app.app_context():
     db.create_all()
 
 ### ROUTE CONFIGURATION
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, int(user_id))
 
 
 @app.before_request
