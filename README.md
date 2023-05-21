@@ -3,6 +3,10 @@
 
 ## Round 2 TASK OF DEVREV
 
+
+### The website is hosted at https://flight-booking-system-devrev.onrender.com
+##### Note: This web application was designed for desktop.
+
 ## SETUP
 
 #### Step 1: Clone the repository using the command 'git clone https://github.com/Joshua-David1/flight-booking-system-devrev.git'
