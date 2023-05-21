@@ -4,7 +4,7 @@
 ## Round 2 TASK OF DEVREV
 
 
-### The website is hosted at https://flight-booking-system-devrev.onrender.com
+## The website is hosted at https://flight-booking-system-devrev.onrender.com
 ##### Note: This web application was designed for desktop.
 
 ## SETUP
@@ -88,6 +88,12 @@ After entering the details of the flight to add, it would be displayed in the ad
 
 
 If we want to take a look at who all booked a particular flight, we could press the Booked Users button.
+FLight Cancellation could also be done by the admin by click on the red button 'cancel flight'.
+
+### CANCELLING A FLIGH
+![after-flight-cancel](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/a283ab4b-c494-49f9-9bfb-3291b5b47674)
+ Flight 90d has been canceled.
+
 
 ### BOOKED USERS
 
