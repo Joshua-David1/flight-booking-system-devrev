@@ -39,14 +39,6 @@ def load_user(user_id):
     return User.query.filter_by(id=user_id).first()
 
 
-@app.before_request
-def before_request():
-    session.permanent = True
-    app.permanent_session_lifetime = timedelta(hours=10)
-    session.modified = True
-    g.user = current_user
-
-
 ### VALIDATIONS
 
 
@@ -369,6 +361,14 @@ with app.app_context():
 ### ROUTE CONFIGURATION
 
 
+@app.before_request
+def before_request():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(hours=10)
+    session.modified = True
+    g.user = current_user
+
+
 @app.route("/")
 def home():
     if not current_user.is_authenticated:
@@ -408,13 +408,15 @@ def register_page():
 
 @app.route("/admin-login", methods=["POST", "GET"])
 def admin_login_page():
-    form = LoginFormAdmin()
-    if form.validate_on_submit():
-        username = form.username.data
-        user = User.query.filter_by(username=username).first()
-        login_user(user)
-        return redirect(url_for("admin_dashboard_page"))
-    return render_template("admin-login.html", form=form)
+    if not current_user.is_authenticated:
+        form = LoginFormAdmin()
+        if form.validate_on_submit():
+            username = form.username.data
+            user = User.query.filter_by(username=username).first()
+            login_user(user)
+            return redirect(url_for("admin_dashboard_page"))
+        return render_template("admin-login.html", form=form)
+    return redirect(url_for("dashboard_page"))
 
 
 @app.route("/myBooking")
