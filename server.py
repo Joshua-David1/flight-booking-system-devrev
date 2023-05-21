@@ -21,7 +21,6 @@ from booking_process import BookingProcess
 from decouple import config
 
 app = Flask(__name__)
-app.app_context().push()
 app.config["SECRET_KEY"] = "nothingmuch"
 app.config["SQLALCHEMY_DATABASE_URI"] = config("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = "OFF"
