@@ -41,6 +41,7 @@ In the user dashboard is where the flights booked by the user would be displayed
 ![available-flights](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/629d8cae-ea95-4c25-ae71-2c4b02ae3216)
 
 All the flights which are availble for booking will be displayed in this section.
+The flight number along with source, destination and time and date of departure would be listed.
 
 ### SEARCHING FOR A FLIGHT WITH SOURCE AND DESTINATION
 
@@ -50,7 +51,46 @@ All the flights which are availble for booking will be displayed in this section
  ### AFTER BOOKING
  ![after-booking](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/1416508d-6664-4484-b804-54184a53c8a8)
 
-After booking, the flight would be displayed in the dashboard of the user.
+After booking, the flight would be displayed in the dashboard of the user. The user also has the ability to cancel their flight.
+
+### ADMIN LOGIN
+
+#### username for admin - 'admin', password - 'admin'
+
+![admin-login](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/2225db21-12c2-4d5f-9007-c388c1e2d998)
+This is where the admin could login into
+
+### ADMIN DASHBOARD
+
+![admin-dashboard](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/9a1b8e2b-f8de-402f-a75d-25f9aaa560fc)
+
+This is where all the flights added by the admin would be available. Admin has the ability to see all the users who booked a particular flight and can cancel the flight anytime.
+
+### ADD A FLIGHT
+
+![add-flight-ui](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/879e2592-b431-4aac-9a65-3fe6deb30327)
+
+
+### FLIGHT DETAILS TO ADD
+
+![before-add-flight](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/9cb493f7-9198-48d1-8ab9-cc535eda7b47)
+
+
+### AFTER ADDING A NEW FLIGHT
+
+![after-add-flight](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/8b05f831-5638-4de9-ad7c-ca3912369329)
+
+After entering the details of the flight to add, it would be displayed in the admin dashboard along with all the other flights.
+
+
+If we want to take a look at who all booked a particular flight, we could press the Booked Users button.
+
+### BOOKED USERS
+
+![booked-users](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/b410bb2b-6e94-47af-80d4-fdd9ea200ff9)
+
+
+
 
 
  
