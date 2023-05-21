@@ -16,9 +16,22 @@
 
 A login page is separately designed for Normal Users and admin.
 
+### HOME PAGE
 ![home](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/12b4d232-aa04-4131-ac76-59560ca800e5)
+### REGISTER PAGE
 ![register](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/74bcb323-6df4-4f36-9621-9a1fccaafa1a)
+### LOGIN PAGE
 ![login](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/64041dad-12fc-425b-af00-6e6c975cbb9e)
+### ADMIN LOGIN PAGE
 ![admin-login](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/da8e37d3-39c2-4a47-8c7c-a81638539b3f)
 
-Above are the screenshots of home, register, regular login and admin login page.
+Users cannot login at admin login, and admin cannot login at user login.
+
+
+### REGISTERING A USER
+![login-cred](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/429ffcb5-9ca4-4cda-8a5c-ebe19dac9f30)
+
+A user named test10 with a password 'test10' is created in the above screenshot.
+### USER DASHBOARD
+![user-dashboard](https://github.com/Joshua-David1/flight-booking-system-devrev/assets/69303816/a947f378-bb0c-4679-be61-17b304551325)
+In the user dashboard is where the flights booked by the user would be displayed.
