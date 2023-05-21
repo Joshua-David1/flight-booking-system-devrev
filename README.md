@@ -3,8 +3,8 @@
 
 ## Round 2 TASK OF DEVREV
 
-
-## The website is hosted at https://flight-booking-system-devrev.onrender.com
+## HOSTED WEBSITE
+### The website is hosted at https://flight-booking-system-devrev.onrender.com
 ##### Note: This web application was designed for desktop.
 
 ## SETUP
