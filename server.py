@@ -16,7 +16,6 @@ from wtforms import StringField, PasswordField, SelectField
 from wtforms.validators import InputRequired, Regexp, ValidationError, EqualTo
 from flask_login import LoginManager, login_user, UserMixin, logout_user, current_user
 from datetime import timedelta
-from werkzeug.security import generate_password_hash, check_password_hash
 from flight_process import FlightProcess
 from booking_process import BookingProcess
 from decouple import config
