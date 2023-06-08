@@ -52,10 +52,14 @@ class FlightProcess(object):
         flight.seats_occupied -= 1
         self.db.session.commit()
 
-    def search_by_src_n_dst(self, source, destination, booked_flights):
+    def search_by_src_n_dst(self, source, destination, booked_flights, month, day):
         flight = self.flight.query.filter_by(
             source=source, destination=destination
         ).all()
+        if month != "0":
+            flight = self.flight.query.filter_by(
+                source=source, destination=destination, month=month, day=day
+            ).all()
         temp = []
         for f in flight:
             if f.total_seats > f.seats_occupied and f not in booked_flights:

@@ -97,12 +97,18 @@ class SeatsCheck(object):
 
 
 class MonthDayCheck(object):
-    def __init__(self) -> None:
-        pass
+    def __init__(self, inSearch=False) -> None:
+        self.inSearch = inSearch
 
     def __call__(self, form, field):
-        if field.data.lower() == "month" or field.data.lower() == "day":
-            raise ValidationError("[!]Choose a valid option")
+        if not self.inSearch:
+            if field.data.lower() == "month" or field.data.lower() == "day":
+                raise ValidationError("[!]Choose a valid option")
+        else:
+            if (field.data.lower() == "day" and form.month.data.lower() != "month") or (
+                field.data.lower() == "month" and form.day.data.lower() != "day"
+            ):
+                raise ValidationError("[!]Choose a valid option")
 
 
 class SourceDestinationChosen(object):
@@ -307,6 +313,22 @@ class SearchFlightForm(FlaskForm):
         "Gujarat",
         "Assam",
     ]
+    months_list = [
+        "Month",
+        "JAN",
+        "FEB",
+        "MAR",
+        "APRIL",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC",
+    ]
+    days_list = ["Day"] + [str(i) for i in range(1, 31)]
     source = SelectField(
         label="source",
         choices=["Source"] + places,
@@ -317,6 +339,11 @@ class SearchFlightForm(FlaskForm):
         choices=["Destination"] + places,
         validators=[SourceDestinationChosen()],
     )
+
+    month = SelectField(
+        label="month", choices=months_list, validators=[MonthDayCheck(True)]
+    )
+    day = SelectField(label="day", choices=days_list, validators=[MonthDayCheck(True)])
 
 
 ##### DATABASE TABLESS
@@ -553,6 +580,8 @@ def search_flight_page():
             if form.validate_on_submit():
                 source = form.source.data
                 destination = form.destination.data
+                month = form.month.data
+                day = form.day.data
                 flightProcess = FlightProcess(db, Flight)
                 booked_flights = Booking.query.filter_by(
                     username=current_user.username
@@ -561,10 +590,14 @@ def search_flight_page():
                     Flight.query.filter_by(flight_no=details.flight_no).first()
                     for details in booked_flights
                 ]
-                flight_list = flightProcess.search_by_src_n_dst(
-                    source, destination, tickets_list
-                )
 
+                flight_list = flightProcess.search_by_src_n_dst(
+                    source,
+                    destination,
+                    tickets_list,
+                    "0" if month_map[month] == "month" else month_map[month],
+                    "0" if day == "Day" else day,
+                )
                 data = {"form": form, "flight_list": flight_list}
                 return render_template("search-flight.html", data=data)
             return render_template("search-flight.html", data=data)

@@ -28,10 +28,18 @@
             {% if data['form'].source.errors %}
             <span style="color:red;font-size:15px;margin:0;display: block;">{{data['form'].source.errors[0]}}</span>
             {% endif %}
-            <br>
             {{data['form'].destination}}
             {% if data['form'].destination.errors and not data['form'].source.errors%}
             <span style="color:red;font-size:15px;margin:0;display: block;">{{data['form'].destination.errors[0]}}</span>
+            {% endif %}
+            <br>
+            {{data['form'].month}}
+            {% if data['form'].month.errors and not data['form'].source.errors and not data['form'].destination.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{data['form'].month.errors[0]}}</span>
+            {% endif %}
+            {{data['form'].day}}
+            {% if data['form'].day.errors and not data['form'].source.errors and not data['form'].destination.errors %}
+            <span style="color:red;font-size:15px;margin:0;display: block;">{{data['form'].day.errors[0]}}</span>
             {% endif %}
             <br>
             <button class="btn login-btn">Search Flight</button>
