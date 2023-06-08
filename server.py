@@ -595,7 +595,7 @@ def search_flight_page():
                     source,
                     destination,
                     tickets_list,
-                    "0" if month_map[month] == "month" else month_map[month],
+                    "0" if month == "Month" else month_map[month],
                     "0" if day == "Day" else day,
                 )
                 data = {"form": form, "flight_list": flight_list}
