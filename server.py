@@ -22,7 +22,9 @@ from decouple import config
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "nothingmuch"
-app.config["SQLALCHEMY_DATABASE_URI"] = config("DATABASE_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = config(
+    "DATABASE_URL", "sqlite:///user-data-collection.db"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = "OFF"
 db = SQLAlchemy(app)
 
@@ -602,9 +604,38 @@ def cancel_booking_page():
         if current_user.username != "admin":
             f_no = request.form["flight_no"]
             bookingProcess = BookingProcess(db, Booking)
-            bookingProcess.delete_from_booking(f_no)
+            bookingProcess.delete_from_booking(f_no, False, current_user.username)
             flightProcess = FlightProcess(db, Flight)
             flightProcess.decrement_seat(f_no)
+    return redirect(url_for("login_page"))
+
+
+@app.route("/view-users", methods=["GET"])
+def view_user_page():
+    if current_user.is_authenticated:
+        if current_user.username == "admin":
+            api_data = {"DevRev-Flight-details": []}
+            usernames = User.query.filter(User.username != "admin").all()
+            for user in usernames:
+                if user.username != "admin":
+                    booked_flights = Booking.query.filter_by(
+                        username=user.username
+                    ).all()
+                    flight_list = {
+                        Flight.query.filter_by(flight_no=details.flight_no).first()
+                        for details in booked_flights
+                    }
+                    data = {user.username: {}}
+                    for flight in flight_list:
+                        flight_dict = {
+                            "Flight Number": flight.flight_no,
+                            "Date and Time": f"{flight.day}/{flight.month}  {flight.hour}:{flight.minute}",
+                            "Source": flight.source,
+                            "Destination": flight.destination,
+                        }
+                        data[user.username][flight.flight_no] = flight_dict
+                    api_data["DevRev-Flight-details"].append(data)
+            return jsonify(api_data)
     return redirect(url_for("login_page"))
 
 
